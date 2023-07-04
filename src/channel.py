@@ -1,20 +1,20 @@
 import json
 import os
+from pprint import pprint
+
 from googleapiclient.discovery import build
 
-from helper.youtube_api_manual import printj
+
 
 
 class Channel:
     """Класс для ютуб-канала"""
 
-    def __init__(self, channel_id: str, api_key: str, youtube: str) -> None:
+    def __init__(self, channel_id: str) -> None:
         """Экземпляр инициализируется id канала. Дальше все данные будут подтягиваться по API."""
         self.channel_id = channel_id
-        self.youtube = youtube
-        self.channel_id = "UC-OVMPlMA3-YCIeg4z5z23A"
-        self.api_key: str = os.getenv('YouTube_API_KEY')
-        self.youtube = build('youtube', 'v3', developerKey=api_key)
+        self.api_key: str = 'AIzaSyD9xY2qA-bHKbLbxuRxlAePFglsHFrmkBY'
+        self.youtube = build('youtube', 'v3', developerKey=self.api_key)
 
     def printj(dict_to_print: dict) -> None:
         """Выводит словарь в json-подобном удобном формате с отступами"""
@@ -22,6 +22,5 @@ class Channel:
 
     def print_info(self) -> None:
         """Выводит в консоль информацию о канале."""
-        channel_id = "UC-OVMPlMA3-YCIeg4z5z23A"
-        channel = youtube.channels().list(id=channel_id, part='snippet,statistics').execute()
-        printj(channel)
+        channel = self.youtube.channels().list(id=self.channel_id, part='snippet,statistics').execute()
+        pprint(channel)
