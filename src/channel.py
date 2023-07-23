@@ -9,6 +9,7 @@ from googleapiclient.discovery import build
 
 class Channel:
     """Класс для ютуб-канала"""
+    _channel_id: str
     api_key = os.getenv('YouTube_API_KEY')
 
     def __init__(self, channel_id: str) -> None:
@@ -18,7 +19,7 @@ class Channel:
         self.title: str = response['items'][0]['snippet']['title']
         self.description: str = response['items'][0]['snippet']['description']
         self.url = "https://www.youtube.com/channel/" + channel_id
-        self.subscriber_count : int = response['items'][0]['statistics']['subscriberCount']
+        self.subscriber_count: int = response['items'][0]['statistics']['subscriberCount']
         self.video_count: int = response['items'][0]['statistics']['videoCount']
         self.view_count: int = response['items'][0]['statistics']['viewCount']
 
@@ -45,7 +46,7 @@ class Channel:
         return self._channel_id
 
     def print_info(self) -> None:
-        """Выводит в консоль информацию о канале."""
+        """Выводит в консоль информацию о канале (по заданию в main.py(1)."""
         channel = self.get_info()
         pprint(channel)
 
@@ -59,9 +60,9 @@ class Channel:
         youtube = build('youtube', 'v3', developerKey=cls.api_key)
         return youtube
 
-    def printj(dict_to_print: dict) -> None:
-        """Выводит словарь в json-подобном удобном формате с отступами"""
-        print(json.dumps(dict_to_print, indent=2, ensure_ascii=False))
+    # def printj(dict_to_print: dict) -> None:
+    #     """Выводит словарь в json-подобном удобном формате с отступами"""
+    #     print(json.dumps(dict_to_print, indent=2, ensure_ascii=False))
 
     def to_json(self, path):
         path_to_file = os.path.join("..", "homework-2", path)
