@@ -2,6 +2,7 @@ from src.channel import Channel
 from datetime import timedelta
 import isodate
 
+
 class PlayList(Channel):
     def __init__(self, playlist_id: str):
         self._playlist_id = playlist_id
@@ -10,9 +11,8 @@ class PlayList(Channel):
         self.title: str = self.playlist_response['items'][0]['snippet']['title']
         self.url = 'https://www.youtube.com/playlist?list=' + playlist_id
 
-    @property
-    def total_duration(self):
-        duration_list = []
+
+    def get_playlist_info(self):
         playlist_videos = self.youtube.playlistItems().list(playlistId=self._playlist_id,
                                                        part='contentDetails',
                                                        maxResults=50,
@@ -21,7 +21,12 @@ class PlayList(Channel):
         video_response = self.youtube.videos().list(part='contentDetails,statistics',
                                                          id=','.join(video_ids)
                                                          ).execute()
-        for video in video_response['items']:
+        return video_response
+
+    @property
+    def total_duration(self):
+        duration_list = []
+        for video in self.get_playlist_info()['items']:
             # YouTube video duration is in ISO 8601 format
             iso_8601_duration = video['contentDetails']['duration']
             duration = isodate.parse_duration(iso_8601_duration)
@@ -32,12 +37,10 @@ class PlayList(Channel):
             sum_duration += duration
         return sum_duration
 
-
     def show_best_video(self):
         best_likes = 0
-        playlist_response = self.youtube.playlists().list(part='snippet,contentDetails',id=self._playlist_id).execute()
-        for video in playlist_response['items']:
+        for video in self.get_playlist_info()['items']:
             if int(video['statistics']['likeCount']) > int(best_likes):
                 best_likes = video['statistics']['likeCount']
                 video_id = video['id']
-        return playlist_response
+        return 'https://youtu.be/' + video_id

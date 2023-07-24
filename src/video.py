@@ -16,7 +16,7 @@ class Video(Channel):
     def __str__(self):
         return f"{self.video_title}"
 
-class PLVideo(Channel):
+class PLVideo(Video):
     def __init__(self, video_id: str, playlist_id: str):
         self._video_id = video_id
         self.playlist_id = playlist_id
