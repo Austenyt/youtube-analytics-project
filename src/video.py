@@ -2,8 +2,7 @@ from src.channel import Channel
 
 
 class Video(Channel):
-    def __init__(self, video_id: str, channel_id: str):
-        super().__init__(channel_id)
+    def __init__(self, video_id: str):
         try:
             self._video_id = video_id
             self.youtube = self.get_service()
@@ -14,11 +13,9 @@ class Video(Channel):
             self.video_title: str = self.video_response['items'][0]['snippet']['title']
             self.view_count: int = self.video_response['items'][0]['statistics']['viewCount']
             self.like_count: int = self.video_response['items'][0]['statistics']['likeCount']
-        except:
+        except(IndexError):
             self._video_id = video_id
-            self.url = None
             self.title = None
-            self.view_count = None
             self.like_count = None
 
     def __str__(self):
